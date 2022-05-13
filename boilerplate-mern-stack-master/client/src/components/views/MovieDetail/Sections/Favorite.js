@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Axios from 'axios'
 
 function Favorite(props) {
@@ -16,6 +16,7 @@ function Favorite(props) {
         }
 
         // 서버의 DB에 데이터 요청: fetch 또는 axios
+        // 좋아요 개수
         Axios.post('/api/favorite/favoriteNumber', variables)
             .then(response => {
                 console.log(response.data)
@@ -24,6 +25,17 @@ function Favorite(props) {
                     
                 } else {
                     alert('숫자 정보를 가져오는 데 실패했습니다.')
+                }
+            })
+
+        // 좋아요 여부
+        Axios.post('/api/favorite/favorited', variables)
+            .then(response => {
+
+                if(response.data.success) {
+                    console.log('favorited', response.data)
+                } else {
+                    alert('정보를 가져오는 데 실패했습니다.')
                 }
             })
 
