@@ -9,18 +9,23 @@ function Favorite(props) {
     const moviePost = props.movieInfo.backdrop_path
     const movieRunTime = props.movieInfo.runtime
 
+    const [FavoriteNumber, setFavoriteNumber] = useState(0)
+    const [Favorited, setFavorited] = useState(false)
+
     useEffect(() => {
         let  variables = {
-            userFrom,
-            movieId
+            userFrom: userFrom,
+            movieId: movieId,
+            movieTitle: movieTitle,
+            moviePost: moviePost,
+            movieRunTime: movieRunTime
         }
 
         // 서버의 DB에 데이터 요청: fetch 또는 axios
         // 좋아요 개수
         Axios.post('/api/favorite/favoriteNumber', variables)
             .then(response => {
-                console.log(response.data)
-
+                setFavoriteNumber(response.data.favoriteNumber)
                 if(response.data.success) {
                     
                 } else {
@@ -33,7 +38,7 @@ function Favorite(props) {
             .then(response => {
 
                 if(response.data.success) {
-                    console.log('favorited', response.data)
+                    setFavoriteNumber(response.data.favorited)
                 } else {
                     alert('정보를 가져오는 데 실패했습니다.')
                 }
@@ -42,9 +47,32 @@ function Favorite(props) {
 
     }, [])
 
+    // 12강 좋아요 리스트에 추가/삭제
+    const onClickFavorite = () => {
+        if(Favorited) {
+            Axios.post('/api/favorite/removeFromFavorite', variables)
+                .then(response => {
+                    if(response.data.success) {
+
+                    } else {
+                        alert('Favorite 리스트에서 지우는 걸 실패했습니다.')
+                    }
+                })
+        } else {
+            Axios.post('/api/favorite/addToFavorite', variables)
+                .then(response => {
+                    if(response.data.success) {
+
+                    } else {
+                        alert('Favorite 리스트에 추가하는 걸 실패했습니다.')
+                    }
+                })
+        }
+    }
+
     return (
         <div>
-        <button>Favorite</button>
+            <button onAbort={onClickFavorite}>{Favorited ? "Not Favorite" : "Add to Favorite" }  {FavoriteNumber} </button>
         </div>
     )
 }

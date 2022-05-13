@@ -43,5 +43,33 @@ router.post('/favorited', (req, res) => { // 이 콜백 함수를 통해서 데�
 
 })
 
+/* 12강 좋아요 추가/삭제 */
+
+router.post('/removeFromFavorite', (req, res) => { // 이 콜백 함수를 통해서 데이터를 얻어올 수 있음
+
+    Favorite.findOneAndDelete({ movieId: req.body.movieId, userFrom: req.body.userFrom })  // 이 조건에 맞는 항목을 지워달라
+        .exec((err, doc) => {
+            if(err) return res.status(400).send(err)
+            res.status(200).json({ success: true, doc })
+        })
+
+})
+
+router.post('/addToFavorite', (req, res) => { 
+
+    const favorite = new Favorite(req.body)  // 인스턴스 생성
+    
+    favorite.save((err, doc) => {  // req.body에 있는 모든 정보가 이 favorite document에 모두 저장됨
+        // mongoDB에서 err 또는 결과값을 줌
+
+        if(err) return res.status(400).send(err)
+        return res.status(200).json({ success: true })
+    })
+
+
+
+})
+
+
 
 module.exports = router;
