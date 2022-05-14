@@ -79,4 +79,16 @@ router.post('/getFavoredMovie', (req, res) => {
 
 })
 
+// 좋아요 페이지에서 리스트 삭제
+router.post('/removeFromFavorite', (req, res) => {
+
+    Favorite.findOneAndDelete({ movieId: req.body.movieId, userFrom: req.body.userFrom })  // 이 조건에 맞는 항목을 지워달라
+        .exec((err, result) => {
+            if(err) return res.status(400).send(err)
+            return res.status(200).json({ success: true })
+        })
+
+})
+
+
 module.exports = router;

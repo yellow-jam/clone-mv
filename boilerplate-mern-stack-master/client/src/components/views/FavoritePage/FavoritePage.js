@@ -20,6 +20,24 @@ function FavoritePage() {
                 }
             })
     }, [])
+    
+
+    // 삭제
+    const onClickDelete = (movieId, userFrom) => {
+        const variables = {
+            movieId,
+            userFrom
+        }
+
+        Axios.post('/api/favorite/removeFromFavorite', variables)
+            .then(response => {
+                if(response.data.success) {
+
+                } else {
+                    alert("리스트에서 지우는 데 실패했습니다.")
+                }
+            })
+    }
 
     const renderCards = Favorites.map((favorite, index) => {
         // Popover(antd 컴포넌트) 오버마우스 시 띄워지는 부분의 content에 관한 선언
@@ -36,7 +54,7 @@ function FavoritePage() {
             </Popover>
             
             <td>{favorite.movieRunTime} mins</td>
-            <td><button>Remove</button></td>
+            <td><button onClick={onClickDelete(favorite.movieId, favorite.userFrom)}>Remove</button></td>
         </tr>
     })
 
