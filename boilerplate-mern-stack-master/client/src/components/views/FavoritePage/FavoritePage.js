@@ -9,7 +9,11 @@ function FavoritePage() {
     const [Favorites, setFavorites] = useState([])
 
     useEffect(() => {
+        fetchFavoredMovie()
+        
+    }, [])
 
+    const fetchFavoredMovie = () => {
         Axios.post('/api/favorite/getFavoredMovie', { userFrom: localStorage.getItem('userId') })
             .then(response => {
                 if(response.data.success) {
@@ -19,11 +23,11 @@ function FavoritePage() {
                     alert('영화 정보를 가져오는 데 실패했습니다.')
                 }
             })
-    }, [])
-    
+    }
 
     // 삭제
     const onClickDelete = (movieId, userFrom) => {
+        
         const variables = {
             movieId,
             userFrom
@@ -32,7 +36,7 @@ function FavoritePage() {
         Axios.post('/api/favorite/removeFromFavorite', variables)
             .then(response => {
                 if(response.data.success) {
-
+                    fetchFavoredMovie()
                 } else {
                     alert("리스트에서 지우는 데 실패했습니다.")
                 }
@@ -54,7 +58,7 @@ function FavoritePage() {
             </Popover>
             
             <td>{favorite.movieRunTime} mins</td>
-            <td><button onClick={onClickDelete(favorite.movieId, favorite.userFrom)}>Remove</button></td>
+            <td><button onClick={()=>onClickDelete(favorite.movieId, favorite.userFrom)}>Remove</button></td>
         </tr>
     })
 
